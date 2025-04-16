@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Elasticsearch\" />
+    <Folder Include="Kafka\" />
+    <Folder Include="Persistence\" />
+    <Folder Include="Repositories\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\PermissionsApp.Application\PermissionsApp.Application.csproj" />
+    <ProjectReference Include="..\PermissionsApp.Domain\PermissionsApp.Domain.csproj" />
+  </ItemGroup>
+
+</Project>
