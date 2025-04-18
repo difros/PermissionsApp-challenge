@@ -1,0 +1,94 @@
+version: '3.9'
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: sqlserver-dev
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "Chall_Perm1510n"
+      MSSQL_PID: "Developer"
+    ports:
+      - "1433:1433"
+    volumes:
+      - sql_data:/var/opt/mssql
+    networks:
+      - permissions-net
+    healthcheck:
+      test: ["CMD", "bash", "-c", "exec 3<>/dev/tcp/localhost/1433"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.11.1
+    container_name: elasticsearch-dev
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+    ports:
+      - "9200:9200"
+    volumes:
+      - es_data:/usr/share/elasticsearch/data
+    networks:
+      - permissions-net
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.5.0
+    container_name: zookeeper-dev
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+    ports:
+      - "2181:2181"
+    networks:
+      - permissions-net
+
+  kafka:
+    image: confluentinc/cp-kafka:7.5.0
+    container_name: kafka-dev
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    networks:
+      - permissions-net
+
+  permissions-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: permissions-api
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+      elasticsearch:
+        condition: service_started
+      kafka:
+        condition: service_started
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__DefaultConnection: "Server=sqlserver;Database=PermissionsDB;User Id=sa;Password=Chall_Perm1510n;MultipleActiveResultSets=true;TrustServerCertificate=True"
+      ElasticsearchSettings__Uri: "http://elasticsearch:9200"
+      ElasticsearchSettings__DefaultIndex: "permissions"
+      KafkaSettings__BootstrapServers: "kafka:29092"
+      KafkaSettings__Topic: "permissions-events"
+    ports:
+      - "8080:8080"
+      - "8081:8081"
+    networks:
+      - permissions-net
+    restart: on-failure
+
+volumes:
+  sql_data:
+  es_data:
+
+networks:
+  permissions-net:
+    driver: bridge

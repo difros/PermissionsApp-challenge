@@ -1,0 +1,21 @@
+# Ignore temporary compilation folders
+**/bin
+**/obj
+
+# Ignore IDE configurations
+**/.vscode
+**/.vs
+**/*.user
+**/.git
+**/.gitignore
+
+# Ignores common temporary files
+**/*.dbmdl
+**/*.jfm
+**/.env
+**/npm-debug.log
+**/node_modules
+
+# Repository files
+LICENSE
+README.md

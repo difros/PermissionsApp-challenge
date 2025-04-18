@@ -7,11 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Commands\" />
-    <Folder Include="DTOs\" />
-    <Folder Include="Handlers\" />
-    <Folder Include="Mappings\" />
-    <Folder Include="Queries\" />
+    <PackageReference Include="AutoMapper" Version="14.0.0" />
+    <PackageReference Include="MediatR" Version="12.5.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.4" />
   </ItemGroup>
 
   <ItemGroup>
