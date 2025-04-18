@@ -15,7 +15,7 @@ namespace PermissionsApp.Application.Mappings
             CreateMap<PermissionType, PermissionTypeDto>();
 
             // DTO to Domain
-            CreateMap<CreatePermissionDto, Permission>();
+            CreateMap<RequestPermissionDto, Permission>();
             CreateMap<UpdatePermissionDto, Permission>();
         }
     }

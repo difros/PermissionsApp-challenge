@@ -5,9 +5,9 @@ namespace PermissionsApp.Application.Commands
 {
     public class CreatePermissionCommand : IRequest<PermissionDto>
     {
-        public CreatePermissionDto Permission { get; }
+        public RequestPermissionDto Permission { get; }
 
-        public CreatePermissionCommand(CreatePermissionDto pPermission)
+        public CreatePermissionCommand(RequestPermissionDto pPermission)
         {
             Permission = pPermission;
         }

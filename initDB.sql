@@ -16,27 +16,23 @@ BEGIN
         EmployeeLastName NVARCHAR(255) NOT NULL,
         PermissionTypeId INT NOT NULL,
         Date DATETIME NOT NULL,
-        FOREIGN KEY (PermissionTypeId) REFERENCES PermissionTypes(Id)
+        FOREIGN KEY (PermissionTypeId) REFERENCES PermissionTypes(Id),
+        CONSTRAINT UQ_Employee UNIQUE (EmployeeName, EmployeeLastName)
     );
 END
 
 -- Insert initial data into PermissionTypes if it doesn't exist
-IF NOT EXISTS (SELECT * FROM PermissionTypes WHERE Description = 'Read')
+IF NOT EXISTS (SELECT * FROM PermissionTypes WHERE Description = 'Level 1')
 BEGIN
-    INSERT INTO PermissionTypes (Description) VALUES ('Read');
+    INSERT INTO PermissionTypes (Description) VALUES ('Level 1');
 END
 
-IF NOT EXISTS (SELECT * FROM PermissionTypes WHERE Description = 'Create')
+IF NOT EXISTS (SELECT * FROM PermissionTypes WHERE Description = 'Level 2')
 BEGIN
-    INSERT INTO PermissionTypes (Description) VALUES ('Create');
+    INSERT INTO PermissionTypes (Description) VALUES ('Level 2');
 END
 
-IF NOT EXISTS (SELECT * FROM PermissionTypes WHERE Description = 'Update')
+IF NOT EXISTS (SELECT * FROM PermissionTypes WHERE Description = 'Level 3')
 BEGIN
-    INSERT INTO PermissionTypes (Description) VALUES ('Update');
-END
-
-IF NOT EXISTS (SELECT * FROM PermissionTypes WHERE Description = 'Delete')
-BEGIN
-    INSERT INTO PermissionTypes (Description) VALUES ('Delete');
+    INSERT INTO PermissionTypes (Description) VALUES ('Level 3');
 END

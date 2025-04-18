@@ -18,48 +18,88 @@ namespace PermissionsApp.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<PermissionDto>>> GetPermissions()
+        public async Task<ActionResult<ResultDto<IEnumerable<PermissionDto>>>> GetPermissions()
         {
-            var query = new GetPermissionsQuery();
-            var result = await _mediator.Send(query);
-            return Ok(result);
+            try
+            {
+                var query = new GetPermissionsQuery();
+                var result = await _mediator.Send(query);
+                return Ok(ResultDto<IEnumerable<PermissionDto>>.Success(result));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ResultDto<IEnumerable<PermissionDto>>.Failure(ex.Message));
+            }
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<PermissionDto>> GetPermission(int id)
+        public async Task<ActionResult<ResultDto<PermissionDto>>> GetPermission(int id)
         {
-            var query = new GetPermissionByIdQuery(id);
-            var result = await _mediator.Send(query);
+            try
+            {
+                var query = new GetPermissionByIdQuery(id);
+                var result = await _mediator.Send(query);
 
-            if (result == null)
-                return NotFound();
+                if (result == null)
+                    return NotFound(ResultDto<PermissionDto>.Failure($"Permission with ID {id} not found"));
 
-            return Ok(result);
+                return Ok(ResultDto<PermissionDto>.Success(result));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ResultDto<PermissionDto>.Failure(ex.Message));
+            }
         }
 
-        [HttpPost]
-        public async Task<ActionResult<PermissionDto>> CreatePermission(CreatePermissionDto pCreatePermissionDto)
+        [HttpPost("request")]
+        public async Task<ActionResult<ResultDto<PermissionDto>>> CreatePermission(RequestPermissionDto pCreatePermissionDto)
         {
-            var command = new CreatePermissionCommand(pCreatePermissionDto);
-            var result = await _mediator.Send(command);
-            return CreatedAtAction(nameof(GetPermission), new { id = result.Id }, result);
+            try
+            {
+                var command = new CreatePermissionCommand(pCreatePermissionDto);
+                var result = await _mediator.Send(command);
+                return CreatedAtAction(
+                    nameof(GetPermission), 
+                    new { id = result.Id }, 
+                    ResultDto<PermissionDto>.Success(result));
+            }
+            catch (ApplicationException ex)
+            {
+                return Conflict(ResultDto<PermissionDto>.Failure(ex.Message));
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ResultDto<PermissionDto>.Failure(ex.Message));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ResultDto<PermissionDto>.Failure(ex.Message));
+            }
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<PermissionDto>> UpdatePermission(int pId, UpdatePermissionDto pUpdatePermissionDto)
+        public async Task<ActionResult<ResultDto<PermissionDto>>> UpdatePermission(int id, UpdatePermissionDto pUpdatePermissionDto)
         {
-            if (pId != pUpdatePermissionDto.Id)
-                return BadRequest();
-
-            var command = new UpdatePermissionCommand(pUpdatePermissionDto);
+            if (id != pUpdatePermissionDto.Id)
+                return BadRequest(ResultDto<PermissionDto>.Failure("ID in URL does not match ID in request body"));
 
             try
             {
+                var command = new UpdatePermissionCommand(pUpdatePermissionDto);
                 var result = await _mediator.Send(command);
-                return Ok(result);
-            } catch (KeyNotFoundException)
+                return Ok(ResultDto<PermissionDto>.Success(result));
+            }
+            catch (KeyNotFoundException ex)
             {
-                return NotFound();
+                return NotFound(ResultDto<PermissionDto>.Failure(ex.Message));
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ResultDto<PermissionDto>.Failure(ex.Message));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ResultDto<PermissionDto>.Failure(ex.Message));
             }
         }
     }

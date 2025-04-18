@@ -7,7 +7,7 @@ namespace PermissionsApp.Infraestructure.Repositories
     public class UnitOfWork : IUnitOfWork
     {
         private readonly ApplicationDbContext _context;
-        private IRepository<Permission> _permissionRepository;
+        private IPermissionRepository _permissionRepository;
         private IRepository<PermissionType> _permissionTypeRepository;
 
         public UnitOfWork(ApplicationDbContext context)
@@ -15,8 +15,8 @@ namespace PermissionsApp.Infraestructure.Repositories
             _context = context;
         }
 
-        public IRepository<Permission> PermissionRepository =>
-            _permissionRepository ??= new Repository<Permission>(_context);
+        public IPermissionRepository PermissionRepository =>
+            _permissionRepository ??= new PermissionRepository(_context);
 
         public IRepository<PermissionType> PermissionTypeRepository =>
             _permissionTypeRepository ??= new Repository<PermissionType>(_context);

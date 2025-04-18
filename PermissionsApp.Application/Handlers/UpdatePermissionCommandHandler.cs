@@ -30,7 +30,7 @@ namespace PermissionsApp.Application.Handlers
             var existingPermission = await _unitOfWork.PermissionRepository.GetByIdAsync(request.Permission.Id);
 
             if (existingPermission == null)
-                throw new KeyNotFoundException($"Permiso con id {request.Permission.Id} no encontrado.");
+                throw new KeyNotFoundException($"Permission with id {request.Permission.Id} nor found.");
 
             _mapper.Map(request.Permission, existingPermission);
 

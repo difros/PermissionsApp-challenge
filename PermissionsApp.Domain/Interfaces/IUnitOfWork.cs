@@ -4,7 +4,7 @@ namespace PermissionsApp.Domain.Interfaces
 {
     public interface IUnitOfWork : IDisposable
     {
-        IRepository<Permission> PermissionRepository { get; }
+        IPermissionRepository PermissionRepository { get; }
         IRepository<PermissionType> PermissionTypeRepository { get; }
         Task<int> SaveChangesAsync();
     }

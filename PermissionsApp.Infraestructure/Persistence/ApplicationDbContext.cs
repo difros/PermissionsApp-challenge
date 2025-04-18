@@ -27,9 +27,7 @@ namespace PermissionsApp.Infraestructure.Persistence
                 entity.Property(e => e.EmployeeLastName).IsRequired();
                 entity.Property(e => e.Date).IsRequired();
 
-                entity.HasOne(p => p.PermissionType)
-                    .WithMany(p => p.Permissions)
-                    .HasForeignKey(p => p.PermissionTypeId);
+                entity.HasOne(p => p.PermissionType);
             });
 
             base.OnModelCreating(modelBuilder);

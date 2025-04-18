@@ -15,11 +15,6 @@
 **/*.userosscache
 **/*.sln.docstates
 
-/API/PermissionsApp/.vs/
-/API/PermissionsApp/bin/
-/PermissionsApp.Domain/obj/
-/PermissionsApp.Infraestructure/obj/
-
 
 # Build results
 [Dd]ebug/

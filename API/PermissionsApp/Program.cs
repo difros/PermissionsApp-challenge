@@ -28,8 +28,6 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 // DbContext
-//builder.Services.AddDbContext<ApplicationDbContext>(options =>
-//    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(
         builder.Configuration.GetConnectionString("DefaultConnection"),
@@ -106,10 +104,9 @@ using (var scope = app.Services.CreateScope())
         if (!context.PermissionTypes.Any())
         {
             context.PermissionTypes.AddRange(
-                new PermissionType { Description = "Read" },
-                new PermissionType { Description = "Create" },
-                new PermissionType { Description = "Update" },
-                new PermissionType { Description = "Delete" }
+                new PermissionType { Description = "Level 1" },
+                new PermissionType { Description = "Level 2" },
+                new PermissionType { Description = "Level 3" }
             );
             context.SaveChanges();
         }
