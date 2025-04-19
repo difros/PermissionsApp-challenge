@@ -85,6 +85,21 @@ services:
       - permissions-net
     restart: on-failure
 
+  permissions-webapp:
+    build:
+      context: ./webapp
+      dockerfile: ./Dockerfile
+    container_name: permissions-webapp
+    ports:
+      - "3000:3000"
+    depends_on:
+      - permissions-api
+    environment:
+      - REACT_APP_API_URL=http://localhost:8080/api
+    networks:
+      - permissions-net
+    restart: on-failure
+
 volumes:
   sql_data:
   es_data:
