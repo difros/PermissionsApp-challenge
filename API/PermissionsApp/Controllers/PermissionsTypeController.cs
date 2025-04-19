@@ -19,21 +19,37 @@ namespace PermissionsApp.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<PermissionTypeDto>>> GetPermissionTypes()
+        public async Task<ActionResult<ResultDto<IEnumerable<PermissionTypeDto>>>> GetPermissionTypes()
         {
-            var permissionTypes = await _unitOfWork.PermissionTypeRepository.GetAllAsync();
-            return Ok(_mapper.Map<IEnumerable<PermissionTypeDto>>(permissionTypes));
+            try
+            {
+                var permissionTypes = await _unitOfWork.PermissionTypeRepository.GetAllAsync();
+                var mappedTypes = _mapper.Map<IEnumerable<PermissionTypeDto>>(permissionTypes);
+                return Ok(ResultDto<IEnumerable<PermissionTypeDto>>.Success(mappedTypes));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ResultDto<IEnumerable<PermissionTypeDto>>.Failure(ex.Message));
+            }
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<PermissionTypeDto>> GetPermissionType(int id)
+        public async Task<ActionResult<ResultDto<PermissionTypeDto>>> GetPermissionType(int id)
         {
-            var permissionType = await _unitOfWork.PermissionTypeRepository.GetByIdAsync(id);
+            try
+            {
+                var permissionType = await _unitOfWork.PermissionTypeRepository.GetByIdAsync(id);
 
-            if (permissionType == null)
-                return NotFound();
+                if (permissionType == null)
+                    return NotFound(ResultDto<PermissionTypeDto>.Failure($"Permission Type with ID {id} not found"));
 
-            return Ok(_mapper.Map<PermissionTypeDto>(permissionType));
+                var mappedType = _mapper.Map<PermissionTypeDto>(permissionType);
+                return Ok(ResultDto<PermissionTypeDto>.Success(mappedType));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ResultDto<PermissionTypeDto>.Failure(ex.Message));
+            }
         }
     }
 }

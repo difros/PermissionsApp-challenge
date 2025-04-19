@@ -2,6 +2,7 @@
 using MediatR;
 using PermissionsApp.Application.Commands;
 using PermissionsApp.Application.DTOs;
+using PermissionsApp.Domain.Constants;
 using PermissionsApp.Domain.Entities;
 using PermissionsApp.Domain.Interfaces;
 
@@ -58,7 +59,7 @@ namespace PermissionsApp.Application.Handlers
             await _elasticsearchService.IndexPermissionAsync(permission);
 
             // Send message to Kafka
-            await _kafkaProducer.ProduceAsync("request");
+            await _kafkaProducer.ProduceAsync(KafkaOperationType.Request);
 
             return _mapper.Map<PermissionDto>(permission);
         }

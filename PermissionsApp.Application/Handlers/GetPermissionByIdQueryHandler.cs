@@ -2,6 +2,7 @@
 using MediatR;
 using PermissionsApp.Application.DTOs;
 using PermissionsApp.Application.Queries;
+using PermissionsApp.Domain.Constants;
 using PermissionsApp.Domain.Interfaces;
 
 namespace PermissionsApp.Application.Handlers
@@ -30,7 +31,7 @@ namespace PermissionsApp.Application.Handlers
                 return null;
 
             // Send message to Kafka
-            await _kafkaProducer.ProduceAsync($"get-{request.Id}");
+            await _kafkaProducer.ProduceAsync($"{KafkaOperationType.Get}-{request.Id}");
 
             return _mapper.Map<PermissionDto>(permission);
         }

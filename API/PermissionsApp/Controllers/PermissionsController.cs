@@ -56,6 +56,14 @@ namespace PermissionsApp.Controllers
         {
             try
             {
+                if (pCreatePermissionDto.EmployeeName == String.Empty || 
+                    pCreatePermissionDto.EmployeeName == null || 
+                    pCreatePermissionDto.EmployeeName.Length > 100 ||
+                    pCreatePermissionDto.EmployeeLastName == String.Empty ||
+                    pCreatePermissionDto.EmployeeLastName == null ||
+                    pCreatePermissionDto.EmployeeLastName.Length > 100)
+                    return BadRequest(ResultDto<PermissionDto>.Failure("Invalid request data"));
+
                 var command = new CreatePermissionCommand(pCreatePermissionDto);
                 var result = await _mediator.Send(command);
                 return CreatedAtAction(
@@ -82,6 +90,14 @@ namespace PermissionsApp.Controllers
         {
             if (id != pUpdatePermissionDto.Id)
                 return BadRequest(ResultDto<PermissionDto>.Failure("ID in URL does not match ID in request body"));
+            
+            if (pUpdatePermissionDto.EmployeeName == String.Empty ||
+                    pUpdatePermissionDto.EmployeeName == null ||
+                    pUpdatePermissionDto.EmployeeName.Length > 100 ||
+                    pUpdatePermissionDto.EmployeeLastName == String.Empty ||
+                    pUpdatePermissionDto.EmployeeLastName == null ||
+                    pUpdatePermissionDto.EmployeeLastName.Length > 100)
+                return BadRequest(ResultDto<PermissionDto>.Failure("Invalid request data"));
 
             try
             {

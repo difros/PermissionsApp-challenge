@@ -4,6 +4,7 @@ using PermissionsApp.Application.DTOs;
 using PermissionsApp.Application.Queries;
 using PermissionsApp.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using PermissionsApp.Domain.Constants;
 
 namespace PermissionsApp.Application.Handlers
 {
@@ -28,7 +29,7 @@ namespace PermissionsApp.Application.Handlers
             var permissions = await _unitOfWork.PermissionRepository.GetAllWithIncludeAsync(p => p.PermissionType);
             
             // Send message to Kafka
-            await _kafkaProducer.ProduceAsync("get");
+            await _kafkaProducer.ProduceAsync(KafkaOperationType.Get);
 
             return _mapper.Map<IEnumerable<PermissionDto>>(permissions);
         }

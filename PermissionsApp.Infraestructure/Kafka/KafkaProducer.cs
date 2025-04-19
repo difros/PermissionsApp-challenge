@@ -20,7 +20,7 @@ namespace PermissionsApp.Infraestructure.Kafka
             var message = new
             {
                 Id = Guid.NewGuid().ToString(),
-                NameOperation = operationType // "request", "modify" o "get"
+                NameOperation = operationType
             };
 
             using var producer = new ProducerBuilder<Null, string>(_config).Build();

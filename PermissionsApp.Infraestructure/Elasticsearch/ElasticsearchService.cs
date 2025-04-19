@@ -29,9 +29,9 @@ namespace PermissionsApp.Infraestructure.Elasticsearch
                     throw new Exception($"Failed to create index: {createIndexResponse.DebugInformation}");
                 }
 
-                Console.WriteLine($"El índice {_indexName} ha sido creado exitosamente.");
+                Console.WriteLine($"The index {_indexName} has been created sucessfully.");
             } else {
-                Console.WriteLine($"El índice {_indexName} ya existe.");
+                Console.WriteLine($"The index {_indexName} already exists.");
             }
         }
 
@@ -43,7 +43,7 @@ namespace PermissionsApp.Infraestructure.Elasticsearch
         public async Task<IEnumerable<Permission>> SearchPermissionsAsync(string searchTerm)
         {
             var searchResponse = await _elasticClient.SearchAsync<Permission>(s => s
-                .Index(_indexName)
+                .Indices(_indexName)
                 .Query(q => q
                     .MultiMatch(m => m
                         .Fields(new[] { "employeeName", "employeeLastName" })
